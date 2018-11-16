@@ -1,0 +1,21 @@
+source activate python36_torch0.4
+tail -f log.train
+watch -n 1 nvidia-smi
+正式训练
+python Script/build_vocab.py --corpus_path chinese.corpus
+python Script/build_vocab.py --corpus_path english.corpus
+CUDA_VISIBLE_DEVICES=1 nohup python transformer_main.py --cuda True --mode train > log.train 2>&1 &
+CUDA_VISIBLE_DEVICES=1 nohup python transformer_main.py --cuda True --mode train --train_batch_size 16 --interval 8 --d_inner_hid 2048 > log.train 2>&1 &
+CUDA_VISIBLE_DEVICES=2 nohup python Model_Entrances/rnnsearch_entrance.py --cuda True --mode train --if_load_checkpoint True >log.train 2>&1 &
+正式翻译+测BLEU
+CUDA_VISIBLE_DEVICES=3 python Model_Entrances/rnnsearch_entrance.py --cuda True --mode translate
+perl Scripts/multi-bleu.perl Output/Translation/nist03.tok.ref0 Output/Translation/nist03.tok.ref1 Output/Translation/nist03.tok.ref2 Output/Translation/nist03.tok.ref3 < Output/Translation/nist03_translation_output.txt > BLEU_nist03
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+小数据集训练
+python Scripts/build_vocab.py --corpus_path test_chinese.corpus
+python Scripts/build_vocab.py --corpus_path test_english.corpus
+CUDA_VISIBLE_DEVICES=2 nohup python Model_Entrances/rnnsearch_entrance.py --cuda True --mode train --train_src_corpus test_chinese.corpus --train_trg_corpus test_english.corpus> log.test 2>&1 &
+CUDA_VISIBLE_DEVICES=2 nohup python Model_Entrances/rnnsearch_entrance.py --cuda True --mode train --if_load_checkpoint True --train_src_corpus test_chinese.corpus --train_trg_corpus test_english.corpus> log.test 2>&1 &
+小数据集翻译+测BLEU
+CUDA_VISIBLE_DEVICES=2 nohup python Model_Entrances/rnnsearch_entrance.py --cuda True --mode translate --if_load_checkpoint True &
+perl multi-bleu.perl test.ref0 test.ref1 test.ref2 test.ref3 < Output/Translation/test_output.txt > BLEU_test
