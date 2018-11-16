@@ -176,13 +176,11 @@ def train(model, src_vocab, trg_vocab, optim_wrapper, train_iter, vldt_iter):
                 optim_wrapper.zero_grad()
                 total_loss = 0
                 optim_wrapper.update_lr_per_step()
-                '''
-              # 开启额外cpu进程测试开发集bleu时调用下面语句
-              # 从第4轮训练开始，每隔opt.vldt_freq个batch，另开子进程测试一次bleu
-              if cur_epoch >= 4 and (batch_idx * opt.interval) % opt.vldt_freq == 0:
-                  cpu_model = copy.deepcopy(model).cpu()
-                  subprocess_pool.apply_async(evaluate, args=(opt, cpu_model, src_vocab, trg_vocab, vldt_iter, batch_idx, cur_epoch), callback=my_callback)
-              '''
+                # 开启额外cpu进程测试开发集bleu时调用下面语句
+                # 从第4轮训练开始，每隔opt.vldt_freq个batch，另开子进程测试一次BLEU
+                if cur_epoch >= 4 and (batch_idx * opt.interval) % opt.vldt_freq == 0:
+                    cpu_model = copy.deepcopy(model).cpu()
+                    subprocess_pool.apply_async(evaluate, args=(opt, cpu_model, src_vocab, trg_vocab, vldt_iter, batch_idx, cur_epoch), callback=my_callback)
         optim_wrapper.zero_grad()
         optim_wrapper.update_lr_per_epoch()
         save_checkpoint_model(model, opt.checkpoint_dir, cur_epoch, info='RNNSearch_checkpoint_model')
