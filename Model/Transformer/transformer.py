@@ -7,7 +7,7 @@ from Model.Transformer.decoder import Decoder
 from Model.Transformer.encoder import Encoder
 from Model.Transformer.sublayer import Multi_Head_Self_Attention, Layer_Normalization
 from Model.Transformer.utils import position_encoding_init
-from Util.process_data import to_Tensor
+from Util.utils import to_Tensor
 
 
 class Transformer(nn.Module):

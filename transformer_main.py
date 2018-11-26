@@ -24,7 +24,7 @@ from Optim.transformer_optim_wrapper import Transformer_Optim_Wrapper
 from Loss_Function.load_loss_function import load_loss_function
 from Vocab.load_vocab import load_vocab
 from Vocab.vocabulary import Vocabulary
-from Util.process_data import to_Tensor, get_batch_mask, batch_str2idx_with_flag, \
+from Util.utils import to_Tensor, get_batch_mask, batch_str2idx_with_flag, \
                                 batch_idx2str, sort_batch, parallel_corpus_collate_fn
 from Util.save_model import save_checkpoint_model, save_min_loss_model, save_max_bleu_model
 
