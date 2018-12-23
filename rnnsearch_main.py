@@ -275,7 +275,7 @@ if __name__ == "__main__":
                                opt.d_src_emb, opt.enc_nhid, opt.src_emb_dropout, opt.enc_hid_dropout,
                                opt.d_trg_emb, opt.dec_nhid, opt.dec_natt, opt.nreadout,
                                opt.readout_dropout, opt.trg_emb_dropout,
-                               opt.enc_ntok, dec_ntok,
+                               enc_ntok, dec_ntok,
                                cuda=opt.cuda, if_load_state_dict=True, saved_state_dict=opt.checkpoint)
         else:
             model = load_model(RNNSearch,

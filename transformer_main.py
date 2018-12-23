@@ -136,7 +136,7 @@ def my_callback(result):
 
 
 def train(model, src_vocab, trg_vocab, optim_wrapper, train_iter, vldt_iter, loss_function):
-    global opt, dec_ntok, min_loss, max_bleu
+    global opt, min_loss, max_bleu
     subprocess_pool = Pool(2)
 
     model.train()
